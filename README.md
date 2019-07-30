@@ -115,7 +115,7 @@ for x in setuptools pip scipy mock wheel future theano keras numpy pbr; do ln -s
 ln -s ../../../../py-pyyaml-*/lib/python3.7/site-packages/yaml .
 ln -s ../../../../py-keras-applications-*/lib/python3.7/site-packages/keras_applications .
 ln -s ../../../../py-keras-preprocessing-*/lib/python3.7/site-packages/keras_preprocessing .
-TEST_TMPDIR=../.cache/bazel CC=gcc CXX=g++ bazel --batch build --config=numa --config=v2 --config=noaws --config=nohdfs --config=noignite --config=nokafka --config=nonccl --copt=-march=native --copt=-O3 --copt=-finline-functions --copt=-findirect-inlining --cxxopt=-march=native --cxxopt=-O3 --cxxopt=-finline-functions --cxxopt=-findirect-inlining --cxxopt=-D_GLIBCXX_USE_CXX11_ABI=0 //tensorflow/tools/pip_package:build_pip_package --local_cpu_resources=36 --local_ram_resources=$((100*1024)) --use_action_cache --verbose_failures --repository_cache=/scr0/jens/.cache/bazel --disk_cache=/scr0/jens/.cache/bazel
+TEST_TMPDIR=../.cache/bazel CC=gcc CXX=g++ bazel --batch build --config=mkl --config=numa --config=v2 --config=noaws --config=nohdfs --config=noignite --config=nokafka --config=nonccl --copt=-march=native --copt=-O3 --copt=-finline-functions --copt=-findirect-inlining --copt=-DEIGEN_USE_VML --cxxopt=-march=native --cxxopt=-O3 --cxxopt=-finline-functions --cxxopt=-findirect-inlining --cxxopt=-DEIGEN_USE_VML --cxxopt=-D_GLIBCXX_USE_CXX11_ABI=0 //tensorflow/tools/pip_package:build_pip_package --local_cpu_resources=36 --local_ram_resources=$((100*1024)) --use_action_cache --verbose_failures --repository_cache=/scr0/jens/.cache/bazel --disk_cache=/scr0/jens/.cache/bazel
 ./bazel-bin/tensorflow/tools/pip_package/build_pip_package ./tmp/tensorflow_pkg
 python3.7 -m pip install ./tmp/tensorflow_pkg/tensorflow-2.0.0b1-cp37-cp37m-linux_x86_64.whl
 
@@ -127,28 +127,31 @@ pip3.7 install system-query
 #mod /scr0/jens/spack/opt/spack/linux-centos7-x86_64/gcc-9.1.0/py-keras-2.2.4-5btjtcvg66icnznhrt7mnzcrswoenmc3/lib/python3.7/site-packages/keras/backend/tensorflow_backend.py
 #mod /scr0/jens/spack/opt/spack/linux-centos7-x86_64/gcc-9.1.0/py-keras-2.2.4-5btjtcvg66icnznhrt7mnzcrswoenmc3/lib/python3.7/site-packages/keras/optimizers.py
 
-OMP_NUM_THREADS=18 numactl --physcpubind=0-17 python3.7 -m benchmarker  --mode=training --framework=tensorflow --problem=resnet50 --problem_size=32 --batch_size=4
+KMP_BLOCKTIME=0 KMP_AFFINITY=granularity=fine,compact,1,0 OMP_NUM_THREADS=18 numactl --physcpubind=0-35 python3.7 -m benchmarker  --mode=training --framework=tensorflow --problem=resnet50 --problem_size=32 --batch_size=4
 Using TensorFlow backend.
+2019-07-30 12:32:42.585174: I tensorflow/core/common_runtime/process_util.cc:115] Creating new thread pool with default inter op setting: 2 1 18. Tune using inter_op_parallelism_threads for
+ best performance.
 preheat
 WARNING: Logging before flag parsing goes to stderr.
-W0730 09:50:36.095432 140300361901888 deprecation.py:323] From /scr0/jens/spack/opt/spack/linux-centos7-x86_64/gcc-9.1.0/python-3.7.3-civ2iiqopzfrzuhnit4hpexjlm4uwp5b/lib/python3.7/site-packages/tensorflow/python/ops/math_grad.py:1250: add_dispatch_support.<locals>.wrapper (from tensorflow.python.ops.array_ops) is deprecated and will be removed in a future version.
+W0730 12:32:49.256102 140694764250944 deprecation.py:323] From /scr0/jens/spack/opt/spack/linux-centos7-x86_64/gcc-9.1.0/python-3.7.3-civ2iiqopzfrzuhnit4hpexjlm4uwp5b/lib/python3.7/site-pac
+kages/tensorflow/python/ops/math_grad.py:1250: add_dispatch_support.<locals>.wrapper (from tensorflow.python.ops.array_ops) is deprecated and will be removed in a future version.
 Instructions for updating:
 Use tf.where in 2.0, which has the same broadcast rule as np.where
 Epoch 1/1
-32/32 [==============================] - 10s 311ms/step - loss: 1.8542 - acc: 0.7812
+32/32 [==============================] - 21s 670ms/step - loss: 1.1326 - acc: 0.8750
 train
 Epoch 1/3
-32/32 [==============================] - 3s 99ms/step - loss: 1.5898 - acc: 0.7500
+32/32 [==============================] - 2s 74ms/step - loss: 0.7776 - acc: 0.7500
 Epoch 2/3
-32/32 [==============================] - 3s 99ms/step - loss: 4.1142e-05 - acc: 1.0000
+32/32 [==============================] - 2s 74ms/step - loss: 1.0575e-04 - acc: 1.0000
 Epoch 3/3
-32/32 [==============================] - 3s 98ms/step - loss: 5.2154e-07 - acc: 1.0000
+32/32 [==============================] - 2s 74ms/step - loss: 0.3989 - acc: 0.8750
 {
     "batch_size": 4,
     "batch_size_per_device": 4,
     "channels_first": false,
     "cnt_classes": 1000,
-    "device": "intel",
+    "device": "Intel(R) Xeon(R) CPU E5-2699 v3 @ 2.30GHz",
     "framework": "tensorflow",
     "framework_full": "Keras-2.2.4/tensorflow_2.0.0-beta1",
     "gpus": [],
@@ -157,15 +160,47 @@ Epoch 3/3
     "nb_gpus": 0,
     "path_out": "./logs/training",
     "platform": {
-        "cpu": {},
-        "gpus": [],
-        "hdds": {},
+        "cpu": {
+            "brand": "Intel(R) Xeon(R) CPU E5-2699 v3 @ 2.30GHz",
+            "cache": {
+                "1": 32768,
+                "2": 262144,
+                "3": 47185920
+            },  
+            "clock": 2799.5916944444434,
+            "clock_max": 3600.0,
+            "clock_min": 1200.0,
+            "logical_cores": 36,
+            "physical_cores": 18
+        },  
+        "gpus": [
+            {
+                "brand": "Tesla K40c",
+                "clock": 745000,
+                "compute_capability": 3.5,
+                "cores": 2880,
+                "memory": 11996954624,
+                "memory_clock": 3004000,
+                "multiprocessors": 15,
+                "warp_size": 32
+            }
+        ],
+        "hdds": {
+            "/dev/sda": {
+                "model": "Crucial_CT512MX1",
+                "size": 1000215216
+            },
+            "/dev/sdb": {
+                "model": "SAMSUNG MZHPU512",
+                "size": 1000215216
+            }
+        },
         "host": "paris0.m.gsic.titech.ac.jp",
         "os": "Linux-3.10.0-957.12.1.el7.x86_64-x86_64-with-centos-7.6.1810-Core",
         "ram": {
-            "total": null
+            "total": 134941597696
         },
-        "swap": null
+        "swap": 0
     },
     "problem": {
         "bytes_x_train": 19267584,
@@ -179,8 +214,7 @@ Epoch 3/3
         ],
         "size": 32
     },
-    "samples_per_second": 10.144603102744226,
-    "time": 3.154386591166258,
-    "time_epoch": 3.154386591166258
+    "samples_per_second": 13.546549661477052,
+    "time": 2.3622251274064183,
+    "time_epoch": 2.3622251274064183
 }
-
