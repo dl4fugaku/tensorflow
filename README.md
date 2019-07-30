@@ -122,7 +122,7 @@ python3.7 -m pip install ./tmp/tensorflow_pkg/tensorflow-2.0.0b1-cp37-cp37m-linu
 cd /scr0/jens
 git clone --recursive https://github.com/undertherain/benchmarker.git
 cd benchmarker/
-pip3.7 install system-query
+pip3.7 install 'system-query[all]'
 #mod to use tensorflow.compat.v1
 #mod /scr0/jens/spack/opt/spack/linux-centos7-x86_64/gcc-9.1.0/py-keras-2.2.4-5btjtcvg66icnznhrt7mnzcrswoenmc3/lib/python3.7/site-packages/keras/backend/tensorflow_backend.py
 #mod /scr0/jens/spack/opt/spack/linux-centos7-x86_64/gcc-9.1.0/py-keras-2.2.4-5btjtcvg66icnznhrt7mnzcrswoenmc3/lib/python3.7/site-packages/keras/optimizers.py
