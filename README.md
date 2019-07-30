@@ -1,145 +1,186 @@
-<div align="center">
-  <img src="https://www.tensorflow.org/images/tf_logo_social.png">
-</div>
+cd /scr0/jens
+git clone https://github.com/spack/spack.git
+. /scr0/jens/spack/share/spack/setup-env.sh
+spack compiler find
+spack install gcc@9.1.0
+spack load gcc@9.1.0
+spack compiler find
+spack install git%gcc@9.1.0
+spack load git
+spack install hdf5@1.10.5%gcc@9.1.0
+spack load hdf5
+spack install openblas@0.3.6%gcc@9.1.0 threads=openmp
+spack load openblas
+spack install python@3.7.3%gcc@9.1.0 ^ncurses@6.1 ^pkgconf@1.6.1 ^xz@5.2.4 ^readline@7.0
+spack load python@3.7.3
+spack install py-setuptools ^python@3.7.3
+spack load py-setuptools
+spack install py-numpy@1.16.4 ^openblas@0.3.6 /gyvjlof ^py-setuptools@41.0.1 ^python@3.7.3
+spack load py-numpy
+spack install py-scipy@1.2.1 ^py-numpy@1.16.4 ^openblas@0.3.6 /gyvjlof ^py-setuptools@41.0.1 ^python@3.7.3
+spack load py-scipy
+spack install py-pip ^python@3.7.3
+spack install py-wheel ^python@3.7.3
+spack install py-pyyaml ^python@3.7.3
+spack install py-six ^python@3.7.3
+spack install py-pbr ^python@3.7.3
+spack install py-future ^python@3.7.3
+spack install py-mock ^python@3.7.3
+spack install py-theano ^py-numpy@1.16.4 ^openblas@0.3.6 /gyvjlof ^python@3.7.3
+spack install py-keras-preprocessing ^python@3.7.3
+spack install py-keras-applications ^python@3.7.3
+spack install py-keras ^openblas@0.3.6 /gyvjlof ^python@3.7.3
+spack load py-pip; spack load py-wheel; spack load py-pyyaml; spack load py-six; spack load py-pbr; spack load py-future; spack load py-mock
+spack load py-theano; spack load py-keras-preprocessing; spack load py-keras-applications; spack load py-keras
 
------------------
+cd /scr0/jens
+wget https://github.com/bazelbuild/bazel/releases/download/0.25.2/bazel-0.25.2-dist.zip
+mkdir bazel-0.25.2; cd bazel-0.25.2
+unzip ../bazel-0.25.2-dist.zip
+PROTOC=`pwd`/bin/protoc EXTRA_BAZEL_ARGS="--host_javabase=@local_jdk//:jdk" GRPC_JAVA_PLUGIN=`pwd`/grpc-java bash ./compile.sh
 
+git clone https://github.com/dl4fugaku/tensorflow.git
+cd /scr0/jens/tensorflow/
+git checkout -b fugaku-v2b1-plain v2.0.0-beta1
+export PATH=$PATH:`pwd`/../bazel-0.25.2/output
 
-| **`Documentation`** |
-|-----------------|
-| [![Documentation](https://img.shields.io/badge/api-reference-blue.svg)](https://www.tensorflow.org/api_docs/) |
-
-**TensorFlow** is an open source software library for numerical computation
-using data flow graphs. The graph nodes represent mathematical operations, while
-the graph edges represent the multidimensional data arrays (tensors) that flow
-between them. This flexible architecture enables you to deploy computation to
-one or more CPUs or GPUs in a desktop, server, or mobile device without
-rewriting code. TensorFlow also includes
-[TensorBoard](https://github.com/tensorflow/tensorboard), a data visualization
-toolkit.
-
-TensorFlow was originally developed by researchers and engineers
-working on the Google Brain team within Google's Machine Intelligence Research
-organization for the purposes of conducting machine learning and deep neural
-networks research.  The system is general enough to be applicable in a wide
-variety of other domains, as well.
-
-TensorFlow provides stable Python and C APIs as well as non-guaranteed backwards
-compatible API's for C++, Go, Java, JavaScript, and Swift.
-
-Keep up to date with release announcements and security updates by
-subscribing to
-[announce@tensorflow.org](https://groups.google.com/a/tensorflow.org/forum/#!forum/announce).
-
-## Installation
-
-To install the current release for CPU-only:
-
-```
-pip install tensorflow
-```
-
-Use the GPU package for CUDA-enabled GPU cards:
-
-```
-pip install tensorflow-gpu
-```
-
-*See [Installing TensorFlow](https://www.tensorflow.org/install) for detailed
-instructions, and how to build from source.*
-
-People who are a little more adventurous can also try our nightly binaries:
-
-**Nightly pip packages** * We are pleased to announce that TensorFlow now offers
-nightly pip packages under the
-[tf-nightly](https://pypi.python.org/pypi/tf-nightly) and
-[tf-nightly-gpu](https://pypi.python.org/pypi/tf-nightly-gpu) project on PyPi.
-Simply run `pip install tf-nightly` or `pip install tf-nightly-gpu` in a clean
-environment to install the nightly TensorFlow build. We support CPU and GPU
-packages on Linux, Mac, and Windows.
-
-#### *Try your first TensorFlow program*
-
-```shell
-$ python
-```
-
-```python
->>> import tensorflow as tf
->>> tf.enable_eager_execution()
->>> tf.add(1, 2).numpy()
-3
->>> hello = tf.constant('Hello, TensorFlow!')
->>> hello.numpy()
-'Hello, TensorFlow!'
-```
-
-Learn more examples about how to do specific tasks in TensorFlow at the
-[tutorials page of tensorflow.org](https://www.tensorflow.org/tutorials/).
-
-## Contribution guidelines
-
-**If you want to contribute to TensorFlow, be sure to review the [contribution
-guidelines](CONTRIBUTING.md). This project adheres to TensorFlow's
-[code of conduct](CODE_OF_CONDUCT.md). By participating, you are expected to
-uphold this code.**
-
-**We use [GitHub issues](https://github.com/tensorflow/tensorflow/issues) for
-tracking requests and bugs, please see
-[TensorFlow Discuss](https://groups.google.com/a/tensorflow.org/forum/#!forum/discuss)
-for general questions and discussion, and please direct specific questions to
-[Stack Overflow](https://stackoverflow.com/questions/tagged/tensorflow).**
-
-The TensorFlow project strives to abide by generally accepted best practices in open-source software development:
-
-[![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/1486/badge)](https://bestpractices.coreinfrastructure.org/projects/1486)
-[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v1.4%20adopted-ff69b4.svg)](CODE_OF_CONDUCT.md)
-
-## Continuous build status
-
-### Official Builds
-
-| Build Type      | Status | Artifacts |
-| ---             | ---    | ---       |
-| **Linux CPU**   | [![Status](https://storage.googleapis.com/tensorflow-kokoro-build-badges/ubuntu-cc.svg)](https://storage.googleapis.com/tensorflow-kokoro-build-badges/ubuntu-cc.html) | [pypi](https://pypi.org/project/tf-nightly/) |
-| **Linux GPU**   | [![Status](https://storage.googleapis.com/tensorflow-kokoro-build-badges/ubuntu-gpu-py3.svg)](https://storage.googleapis.com/tensorflow-kokoro-build-badges/ubuntu-gpu-py3.html) | [pypi](https://pypi.org/project/tf-nightly-gpu/) |
-| **Linux XLA**   | [![Status](https://storage.googleapis.com/tensorflow-kokoro-build-badges/ubuntu-xla.svg)](https://storage.googleapis.com/tensorflow-kokoro-build-badges/ubuntu-xla.html) | TBA |
-| **MacOS**       | [![Status](https://storage.googleapis.com/tensorflow-kokoro-build-badges/macos-py2-cc.svg)](https://storage.googleapis.com/tensorflow-kokoro-build-badges/macos-py2-cc.html) | [pypi](https://pypi.org/project/tf-nightly/) |
-| **Windows CPU** | [![Status](https://storage.googleapis.com/tensorflow-kokoro-build-badges/windows-cpu.svg)](https://storage.googleapis.com/tensorflow-kokoro-build-badges/windows-cpu.html) | [pypi](https://pypi.org/project/tf-nightly/) |
-| **Windows GPU** | [![Status](https://storage.googleapis.com/tensorflow-kokoro-build-badges/windows-gpu.svg)](https://storage.googleapis.com/tensorflow-kokoro-build-badges/windows-gpu.html) | [pypi](https://pypi.org/project/tf-nightly-gpu/) |
-| **Android**     | [![Status](https://storage.googleapis.com/tensorflow-kokoro-build-badges/android.svg)](https://storage.googleapis.com/tensorflow-kokoro-build-badges/android.html) | [![Download](https://api.bintray.com/packages/google/tensorflow/tensorflow/images/download.svg)](https://bintray.com/google/tensorflow/tensorflow/_latestVersion) |
-| **Raspberry Pi 0 and 1** | [![Status](https://storage.googleapis.com/tensorflow-kokoro-build-badges/rpi01-py2.svg)](https://storage.googleapis.com/tensorflow-kokoro-build-badges/rpi01-py2.html) [![Status](https://storage.googleapis.com/tensorflow-kokoro-build-badges/rpi01-py3.svg)](https://storage.googleapis.com/tensorflow-kokoro-build-badges/rpi01-py3.html) | [Py2](https://storage.googleapis.com/tensorflow-nightly/tensorflow-1.10.0-cp27-none-linux_armv6l.whl) [Py3](https://storage.googleapis.com/tensorflow-nightly/tensorflow-1.10.0-cp34-none-linux_armv6l.whl) |
-| **Raspberry Pi 2 and 3** | [![Status](https://storage.googleapis.com/tensorflow-kokoro-build-badges/rpi23-py2.svg)](https://storage.googleapis.com/tensorflow-kokoro-build-badges/rpi23-py2.html) [![Status](https://storage.googleapis.com/tensorflow-kokoro-build-badges/rpi23-py3.svg)](https://storage.googleapis.com/tensorflow-kokoro-build-badges/rpi23-py3.html) | [Py2](https://storage.googleapis.com/tensorflow-nightly/tensorflow-1.10.0-cp27-none-linux_armv7l.whl) [Py3](https://storage.googleapis.com/tensorflow-nightly/tensorflow-1.10.0-cp34-none-linux_armv7l.whl) |
+TEST_TMPDIR=../.cache/bazel ./configure
+$TEST_TMPDIR defined: output root default is '/scr0/jens/tensorflow/../.cache/bazel' and max_idle_secs default is '15'.
+WARNING: --batch mode is deprecated. Please instead explicitly shut down your Bazel server using the command "bazel shutdown".
+You have bazel 0.25.2- (@non-git) installed.
+Please specify the location of python. [Default is /scr0/jens/spack/opt/spack/linux-centos7-x86_64/gcc-9.1.0/python-3.7.3-civ2iiqopzfrzuhnit4hpexjlm4uwp5b/bin/python]:
 
 
-### Community Supported Builds
+Found possible Python library paths:
+  /scr0/jens/spack/opt/spack/linux-centos7-x86_64/gcc-9.1.0/py-wheel-0.33.1-7jdnl54modjcglz5vx2emxan64a5okmi/lib/python3.7/site-packages
+  /scr0/jens/spack/opt/spack/linux-centos7-x86_64/gcc-9.1.0/py-pyyaml-3.13-dznqm5hsdbz5byq4pk5w3fnhxaiycuiy/lib/python3.7/site-packages
+  /scr0/jens/spack/opt/spack/linux-centos7-x86_64/gcc-9.1.0/py-future-0.16.0-kwly7ba4cr2ufwjlp6wr3msf62ifiv22/lib/python3.7/site-packages
+  /scr0/jens/spack/opt/spack/linux-centos7-x86_64/gcc-9.1.0/py-theano-1.0.4-rgt4yrggrfr7fem5gtzlemm4v3jevy7e/lib/python3.7/site-packages
+  /scr0/jens/spack/opt/spack/linux-centos7-x86_64/gcc-9.1.0/py-mock-2.0.0-utsdmpayrl3pbel2cbxpludjecvhgdsm/lib/python3.7/site-packages
+  /scr0/jens/spack/opt/spack/linux-centos7-x86_64/gcc-9.1.0/py-keras-2.2.4-5btjtcvg66icnznhrt7mnzcrswoenmc3/lib/python3.7/site-packages
+  /scr0/jens/spack/opt/spack/linux-centos7-x86_64/gcc-9.1.0/py-keras-preprocessing-1.0.9-6ppoe4dewroqob74zjazwiblnnwyduaz/lib/python3.7/site-packages
+  /scr0/jens/spack/opt/spack/linux-centos7-x86_64/gcc-9.1.0/py-numpy-1.16.4-qktlhbnwbc22gc6gxzqhcjen5atdyqur/lib/python3.7/site-packages
+  /scr0/jens/spack/opt/spack/linux-centos7-x86_64/gcc-9.1.0/python-3.7.3-civ2iiqopzfrzuhnit4hpexjlm4uwp5b/lib/python3.7/site-packages
+  /scr0/jens/spack/opt/spack/linux-centos7-x86_64/gcc-9.1.0/py-scipy-1.2.1-q2zbo67cdnh6zc2ccjtwpp2ms4o5tete/lib/python3.7/site-packages
+  /scr0/jens/spack/opt/spack/linux-centos7-x86_64/gcc-9.1.0/py-setuptools-41.0.1-4f5j3zzyw74pzvxqaojzprooofmqriea/lib/python3.7/site-packages
+  /scr0/jens/spack/opt/spack/linux-centos7-x86_64/gcc-9.1.0/py-keras-applications-1.0.7-vkzl2emt7q4qhljyflx44fiyej3stvfd/lib/python3.7/site-packages
+  /scr0/jens/spack/opt/spack/linux-centos7-x86_64/gcc-9.1.0/py-pip-19.0.3-epdedu4mxtnekbkmlf3vk36n5txqh3lm/lib/python3.7/site-packages
+  /scr0/jens/spack/opt/spack/linux-centos7-x86_64/gcc-9.1.0/py-six-1.12.0-tksvorruxgnu3wt47kyk5l6vwsxxf77n/lib/python3.7/site-packages
+  /scr0/jens/spack/opt/spack/linux-centos7-x86_64/gcc-9.1.0/py-pbr-3.1.1-neuislaevxrfvekpsjsq4ajce3mmt2jf/lib/python3.7/site-packages
+Please input the desired Python library path to use.  Default is [/scr0/jens/spack/opt/spack/linux-centos7-x86_64/gcc-9.1.0/py-wheel-0.33.1-7jdnl54modjcglz5vx2emxan64a5okmi/lib/python3.7/site-packages]
+/scr0/jens/spack/opt/spack/linux-centos7-x86_64/gcc-9.1.0/python-3.7.3-civ2iiqopzfrzuhnit4hpexjlm4uwp5b/lib/python3.7/site-packages
+Do you wish to build TensorFlow with XLA JIT support? [Y/n]: n
+No XLA JIT support will be enabled for TensorFlow.
 
-Build Type                                                                        | Status                                                                                                                                                                                        | Artifacts
---------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------
-**IBM s390x**                                                                     | [![Build Status](http://ibmz-ci.osuosl.org/job/TensorFlow_IBMZ_CI/badge/icon)](http://ibmz-ci.osuosl.org/job/TensorFlow_IBMZ_CI/)                                                             | TBA
-**Linux ppc64le CPU** Nightly                                                     | [![Build Status](https://powerci.osuosl.org/job/TensorFlow_PPC64LE_CPU_Build/badge/icon)](https://powerci.osuosl.org/job/TensorFlow_PPC64LE_CPU_Build/)                                       | [Nightly](https://powerci.osuosl.org/job/TensorFlow_PPC64LE_CPU_Nightly_Artifact/)
-**Linux ppc64le CPU** Stable Release                                              | [![Build Status](https://powerci.osuosl.org/job/TensorFlow_PPC64LE_CPU_Release_Build/badge/icon)](https://powerci.osuosl.org/job/TensorFlow_PPC64LE_CPU_Release_Build/)                       | [Release](https://powerci.osuosl.org/job/TensorFlow_PPC64LE_CPU_Release_Build/)
-**Linux ppc64le GPU** Nightly                                                     | [![Build Status](https://powerci.osuosl.org/job/TensorFlow_PPC64LE_GPU_Build/badge/icon)](https://powerci.osuosl.org/job/TensorFlow_PPC64LE_GPU_Build/)                                       | [Nightly](https://powerci.osuosl.org/job/TensorFlow_PPC64LE_GPU_Nightly_Artifact/)
-**Linux ppc64le GPU** Stable Release                                              | [![Build Status](https://powerci.osuosl.org/job/TensorFlow_PPC64LE_GPU_Release_Build/badge/icon)](https://powerci.osuosl.org/job/TensorFlow_PPC64LE_GPU_Release_Build/)                       | [Release](https://powerci.osuosl.org/job/TensorFlow_PPC64LE_GPU_Release_Build/)
-**Linux CPU with Intel® MKL-DNN** Nightly                                         | [![Build Status](https://tensorflow-ci.intel.com/job/tensorflow-mkl-linux-cpu/badge/icon)](https://tensorflow-ci.intel.com/job/tensorflow-mkl-linux-cpu/)                                     | [Nightly](https://tensorflow-ci.intel.com/job/tensorflow-mkl-build-whl-nightly/)
-**Linux CPU with Intel® MKL-DNN** <br> **Supports Python 2.7, 3.4, 3.5, and 3.6** | [![Build Status](https://tensorflow-ci.intel.com/job/tensorflow-mkl-build-release-whl/badge/icon)](https://tensorflow-ci.intel.com/job/tensorflow-mkl-build-release-whl/lastStableBuild)      | [1.13.1 pypi](https://pypi.org/project/intel-tensorflow/)
-**Red Hat® Enterprise Linux® 7.6 CPU & GPU** <br> Python 2.7, 3.6                 | [![Build Status](https://jenkins-tensorflow.apps.ci.centos.org/buildStatus/icon?job=tensorflow-rhel7-3.6&build=2)](https://jenkins-tensorflow.apps.ci.centos.org/job/tensorflow-rhel7-3.6/2/) | [1.13.1 pypi](https://tensorflow.pypi.thoth-station.ninja/index/)
+Do you wish to build TensorFlow with OpenCL SYCL support? [y/N]: n
+No OpenCL SYCL support will be enabled for TensorFlow.
 
-## For more information
+Do you wish to build TensorFlow with ROCm support? [y/N]: n
+No ROCm support will be enabled for TensorFlow.
 
-*   [TensorFlow Website](https://www.tensorflow.org)
-*   [TensorFlow Tutorials](https://www.tensorflow.org/tutorials/)
-*   [TensorFlow Model Zoo](https://github.com/tensorflow/models)
-*   [TensorFlow Twitter](https://twitter.com/tensorflow)
-*   [TensorFlow Blog](https://medium.com/tensorflow)
-*   [TensorFlow Course at Stanford](https://web.stanford.edu/class/cs20si)
-*   [TensorFlow Roadmap](https://www.tensorflow.org/community/roadmap)
-*   [TensorFlow White Papers](https://www.tensorflow.org/about/bib)
-*   [TensorFlow YouTube Channel](https://www.youtube.com/channel/UC0rqucBdTuFTjJiefW5t-IQ)
-*   [TensorFlow Visualization Toolkit](https://github.com/tensorflow/tensorboard)
+Do you wish to build TensorFlow with CUDA support? [y/N]: n
+No CUDA support will be enabled for TensorFlow.
 
-Learn more about the TensorFlow community at the [community page of tensorflow.org](https://www.tensorflow.org/community) for a few ways to participate.
+Do you wish to download a fresh release of clang? (Experimental) [y/N]: n
+Clang will not be downloaded.
 
-## License
+Do you wish to build TensorFlow with MPI support? [y/N]: n
+No MPI support will be enabled for TensorFlow.
 
-[Apache License 2.0](LICENSE)
+Please specify optimization flags to use during compilation when bazel option "--config=opt" is specified [Default is -march=native -Wno-sign-compare]:
+
+
+Would you like to interactively configure ./WORKSPACE for Android builds? [y/N]: n
+Not configuring the WORKSPACE for Android builds.
+
+Preconfigured Bazel build configs. You can use any of the below by adding "--config=<>" to your build command. See .bazelrc for more details.
+        --config=mkl            # Build with MKL support.
+        --config=monolithic     # Config for mostly static monolithic build.
+        --config=gdr            # Build with GDR support.
+        --config=verbs          # Build with libverbs support.
+        --config=ngraph         # Build with Intel nGraph support.
+        --config=numa           # Build with NUMA support.
+        --config=dynamic_kernels        # (Experimental) Build kernels into separate shared objects.
+Preconfigured Bazel build configs to DISABLE default on features:
+        --config=noaws          # Disable AWS S3 filesystem support.
+        --config=nogcp          # Disable GCP support.
+        --config=nohdfs         # Disable HDFS support.
+        --config=noignite       # Disable Apache Ignite support.
+        --config=nokafka        # Disable Apache Kafka support.
+        --config=nonccl         # Disable NVIDIA NCCL support.
+Configuration finished
+
+cd /scr0/jens/spack/opt/spack/linux-centos7-x86_64/gcc-9.1.0/python-3.7.3-*/lib/python3.7/site-packages
+for x in setuptools pip scipy mock wheel future theano keras numpy pbr; do ln -s ../../../../py-${x}-*/lib/python3.7/site-packages/${x} .; done
+ln -s ../../../../py-pyyaml-*/lib/python3.7/site-packages/yaml .
+ln -s ../../../../py-keras-applications-*/lib/python3.7/site-packages/keras_applications .
+ln -s ../../../../py-keras-preprocessing-*/lib/python3.7/site-packages/keras_preprocessing .
+TEST_TMPDIR=../.cache/bazel CC=gcc CXX=g++ bazel --batch build --config=numa --config=v2 --config=noaws --config=nohdfs --config=noignite --config=nokafka --config=nonccl --copt=-march=native --copt=-O3 --copt=-finline-functions --copt=-findirect-inlining --cxxopt=-march=native --cxxopt=-O3 --cxxopt=-finline-functions --cxxopt=-findirect-inlining --cxxopt=-D_GLIBCXX_USE_CXX11_ABI=0 //tensorflow/tools/pip_package:build_pip_package --local_cpu_resources=36 --local_ram_resources=$((100*1024)) --use_action_cache --verbose_failures --repository_cache=/scr0/jens/.cache/bazel --disk_cache=/scr0/jens/.cache/bazel
+./bazel-bin/tensorflow/tools/pip_package/build_pip_package ./tmp/tensorflow_pkg
+python3.7 -m pip install ./tmp/tensorflow_pkg/tensorflow-2.0.0b1-cp37-cp37m-linux_x86_64.whl
+
+cd /scr0/jens
+git clone --recursive https://github.com/undertherain/benchmarker.git
+cd benchmarker/
+pip3.7 install system-query
+#mod to use tensorflow.compat.v1
+#mod /scr0/jens/spack/opt/spack/linux-centos7-x86_64/gcc-9.1.0/py-keras-2.2.4-5btjtcvg66icnznhrt7mnzcrswoenmc3/lib/python3.7/site-packages/keras/backend/tensorflow_backend.py
+#mod /scr0/jens/spack/opt/spack/linux-centos7-x86_64/gcc-9.1.0/py-keras-2.2.4-5btjtcvg66icnznhrt7mnzcrswoenmc3/lib/python3.7/site-packages/keras/optimizers.py
+
+OMP_NUM_THREADS=18 numactl --physcpubind=0-17 python3.7 -m benchmarker  --mode=training --framework=tensorflow --problem=resnet50 --problem_size=32 --batch_size=4
+Using TensorFlow backend.
+preheat
+WARNING: Logging before flag parsing goes to stderr.
+W0730 09:50:36.095432 140300361901888 deprecation.py:323] From /scr0/jens/spack/opt/spack/linux-centos7-x86_64/gcc-9.1.0/python-3.7.3-civ2iiqopzfrzuhnit4hpexjlm4uwp5b/lib/python3.7/site-packages/tensorflow/python/ops/math_grad.py:1250: add_dispatch_support.<locals>.wrapper (from tensorflow.python.ops.array_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use tf.where in 2.0, which has the same broadcast rule as np.where
+Epoch 1/1
+32/32 [==============================] - 10s 311ms/step - loss: 1.8542 - acc: 0.7812
+train
+Epoch 1/3
+32/32 [==============================] - 3s 99ms/step - loss: 1.5898 - acc: 0.7500
+Epoch 2/3
+32/32 [==============================] - 3s 99ms/step - loss: 4.1142e-05 - acc: 1.0000
+Epoch 3/3
+32/32 [==============================] - 3s 98ms/step - loss: 5.2154e-07 - acc: 1.0000
+{
+    "batch_size": 4,
+    "batch_size_per_device": 4,
+    "channels_first": false,
+    "cnt_classes": 1000,
+    "device": "intel",
+    "framework": "tensorflow",
+    "framework_full": "Keras-2.2.4/tensorflow_2.0.0-beta1",
+    "gpus": [],
+    "misc": null,
+    "mode": "training",
+    "nb_gpus": 0,
+    "path_out": "./logs/training",
+    "platform": {
+        "cpu": {},
+        "gpus": [],
+        "hdds": {},
+        "host": "paris0.m.gsic.titech.ac.jp",
+        "os": "Linux-3.10.0-957.12.1.el7.x86_64-x86_64-with-centos-7.6.1810-Core",
+        "ram": {
+            "total": null
+        },
+        "swap": null
+    },
+    "problem": {
+        "bytes_x_train": 19267584,
+        "cnt_batches_per_epoch": 8.0,
+        "name": "resnet50",
+        "shape_x_train": [
+            32,
+            224,
+            224,
+            3
+        ],
+        "size": 32
+    },
+    "samples_per_second": 10.144603102744226,
+    "time": 3.154386591166258,
+    "time_epoch": 3.154386591166258
+}
+
