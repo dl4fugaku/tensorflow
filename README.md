@@ -132,26 +132,43 @@ pip3.7 install system-query
 #mod /scr0/jens/spack/opt/spack/linux-centos7-x86_64/gcc-9.1.0/py-keras-2.2.4-5btjtcvg66icnznhrt7mnzcrswoenmc3/lib/python3.7/site-packages/keras/backend/tensorflow_backend.py
 #mod /scr0/jens/spack/opt/spack/linux-centos7-x86_64/gcc-9.1.0/py-keras-2.2.4-5btjtcvg66icnznhrt7mnzcrswoenmc3/lib/python3.7/site-packages/keras/optimizers.py
 
-KMP_BLOCKTIME=0 KMP_AFFINITY=granularity=fine,compact,1,0 OMP_NUM_THREADS=18 numactl --physcpubind=0-35 python3.7 -m benchmarker  --mode=training --framework=tensorflow --problem=resnet50 --problem_size=32 --batch_size=4
+OMP_NUM_THREADS=18 GOMP_SPINCOUNT=0 OMP_SCHEDULE=static OMP_DISPLAY_ENV=TRUE TF_NUM_INTEROP_THREADS=18 TF_NUM_INTRAOP_THREADS=2 numactl --physcpubind=0-35  python3.7 -m benchmarker  --mode=training --framework=tensorflow --problem=resnet50 --problem_size=32 --batch_size=4
+
+OPENMP DISPLAY ENVIRONMENT BEGIN
+  _OPENMP = '201511'
+  OMP_DYNAMIC = 'FALSE'
+  OMP_NESTED = 'FALSE'
+  OMP_NUM_THREADS = '18'
+  OMP_SCHEDULE = 'STATIC'
+  OMP_PROC_BIND = 'FALSE'
+  OMP_PLACES = ''
+  OMP_STACKSIZE = '0'
+  OMP_WAIT_POLICY = 'PASSIVE'
+  OMP_THREAD_LIMIT = '4294967295'
+  OMP_MAX_ACTIVE_LEVELS = '2147483647'
+  OMP_CANCELLATION = 'FALSE'
+  OMP_DEFAULT_DEVICE = '0'
+  OMP_MAX_TASK_PRIORITY = '0'
+  OMP_DISPLAY_AFFINITY = 'FALSE'
+  OMP_AFFINITY_FORMAT = 'level %L thread %i affinity %A'
+OPENMP DISPLAY ENVIRONMENT END
 Using TensorFlow backend.
-2019-07-30 12:32:42.585174: I tensorflow/core/common_runtime/process_util.cc:115] Creating new thread pool with default inter op setting: 2 1 18. Tune using inter_op_parallelism_threads for
- best performance.
+2019-08-02 02:09:13.949593: I tensorflow/core/common_runtime/process_util.cc:115] Creating new thread pool with default inter op setting: 2. Tune using inter_op_parallelism_threads for best performance.
 preheat
 WARNING: Logging before flag parsing goes to stderr.
-W0730 12:32:49.256102 140694764250944 deprecation.py:323] From /scr0/jens/spack/opt/spack/linux-centos7-x86_64/gcc-9.1.0/python-3.7.3-civ2iiqopzfrzuhnit4hpexjlm4uwp5b/lib/python3.7/site-pac
-kages/tensorflow/python/ops/math_grad.py:1250: add_dispatch_support.<locals>.wrapper (from tensorflow.python.ops.array_ops) is deprecated and will be removed in a future version.
+W0802 02:09:20.528584 139971463513920 deprecation.py:323] From /scr0/jens/spack/opt/spack/linux-centos7-x86_64/gcc-9.1.0/python-3.7.3-civ2iiqopzfrzuhnit4hpexjlm4uwp5b/lib/python3.7/site-packages/tensorflow/python/ops/math_grad.py:1250: add_dispatch_support.<locals>.wrapper (from tensorflow.python.ops.array_ops) is deprecated and will be removed in a future version.
 Instructions for updating:
 Use tf.where in 2.0, which has the same broadcast rule as np.where
 Epoch 1/1
-32/32 [==============================] - 21s 670ms/step - loss: 1.1326 - acc: 0.8750
+32/32 [==============================] - 22s 677ms/step - loss: 2.2576 - acc: 0.6250
 train
 Epoch 1/3
-32/32 [==============================] - 2s 74ms/step - loss: 0.7776 - acc: 0.7500
+32/32 [==============================] - 3s 86ms/step - loss: 0.1685 - acc: 0.8750
 Epoch 2/3
-32/32 [==============================] - 2s 74ms/step - loss: 1.0575e-04 - acc: 1.0000
+32/32 [==============================] - 3s 86ms/step - loss: 2.0161e-04 - acc: 1.0000
 Epoch 3/3
-32/32 [==============================] - 2s 74ms/step - loss: 0.3989 - acc: 0.8750
-{
+32/32 [==============================] - 3s 87ms/step - loss: 1.7977 - acc: 0.8750
+{  
     "batch_size": 4,
     "batch_size_per_device": 4,
     "channels_first": false,
@@ -171,14 +188,24 @@ Epoch 3/3
                 "1": 32768,
                 "2": 262144,
                 "3": 47185920
-            },  
-            "clock": 2799.5916944444434,
+            },
+            "clock": 2800.539277777776,
             "clock_max": 3600.0,
             "clock_min": 1200.0,
             "logical_cores": 36,
             "physical_cores": 18
-        },  
+        },
         "gpus": [
+            {
+                "brand": "Tesla K40c",
+                "clock": 745000,
+                "compute_capability": 3.5,
+                "cores": 2880,
+                "memory": 11996954624,
+                "memory_clock": 3004000,
+                "multiprocessors": 15,
+                "warp_size": 32
+            },
             {
                 "brand": "Tesla K40c",
                 "clock": 745000,
@@ -219,7 +246,7 @@ Epoch 3/3
         ],
         "size": 32
     },
-    "samples_per_second": 13.546549661477052,
-    "time": 2.3622251274064183,
-    "time_epoch": 2.3622251274064183
+    "samples_per_second": 11.583470034725194,
+    "time": 2.762557325574259,
+    "time_epoch": 2.762557325574259
 }
