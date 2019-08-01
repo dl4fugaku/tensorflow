@@ -55,13 +55,23 @@ cc_library(
         "src/cpu/xbyak/*.h",
     ]) + [":mkldnn_version_h"],
     hdrs = glob(["include/*"]),
+    # from mkldnn/src/cpu/gemm/gemm.cpp, so we need to remove -UUSE_CBLAS
+    #/* USE_MKL      USE_CBLAS       effect
+    #* -------      ---------       ------
+    #* yes          yes             use Intel(R) MKL CBLAS
+    #* yes          no              use jit
+    #* no           yes             system-dependent CBLAS
+    #* no           no              use jit
+    #*/
     copts = [
         "-fexceptions",
         "-DUSE_MKL",
         "-DUSE_CBLAS",
     ] + if_mkl_open_source_only([
         "-UUSE_MKL",
-        "-UUSE_CBLAS",
+        #"-UUSE_CBLAS",
+	"-I/scr0/jens/spack/opt/spack/linux-centos7-x86_64/gcc-9.1.0/openblas-0.3.6-gyvjlofuwcw25ouj42jazev25svqizuv/include",
+        "-fopenmp",
     ]) + select({
         "@org_tensorflow//tensorflow:linux_x86_64": [
             "-fopenmp",  # only works with gcc
@@ -71,6 +81,18 @@ cc_library(
         ":clang_linux_x86_64": [],
         "//conditions:default": [],
     }),
+    linkopts = [
+        "-fopenmp",
+        "-L/scr0/jens/spack/opt/spack/linux-centos7-x86_64/gcc-9.1.0/openblas-0.3.6-gyvjlofuwcw25ouj42jazev25svqizuv/lib",
+        "-lopenblas",
+        #"-l:libopenblas.a",
+	#"-L/scr0/jens/spack/opt/spack/linux-centos7-x86_64/gcc-9.1.0/gcc-9.1.0-qn3nra4nquabplipzj3k4v6aff2jd4tr/lib64",
+	#"-l:libgfortran.a",
+	#"-L/scr0/jens/spack/opt/spack/linux-centos7-x86_64/gcc-9.1.0/gcc-9.1.0-qn3nra4nquabplipzj3k4v6aff2jd4tr/lib64",
+	#"-l:libquadmath.a",
+	#"-L/scr0/jens/spack/opt/spack/linux-centos7-x86_64/gcc-9.1.0/gcc-9.1.0-qn3nra4nquabplipzj3k4v6aff2jd4tr/lib64",
+	#"-l:libgomp.a",
+    ],
     includes = [
         "include",
         "src",
@@ -81,19 +103,19 @@ cc_library(
     ],
     nocopts = "-fno-exceptions",
     visibility = ["//visibility:public"],
-    deps = select({
-        "@org_tensorflow//tensorflow:linux_x86_64": [
-            "@mkl_linux//:mkl_headers",
-            "@mkl_linux//:mkl_libs_linux",
-        ],
-        "@org_tensorflow//tensorflow:macos": [
-            "@mkl_darwin//:mkl_headers",
-            "@mkl_darwin//:mkl_libs_darwin",
-        ],
-        "@org_tensorflow//tensorflow:windows": [
-            "@mkl_windows//:mkl_headers",
-            "@mkl_windows//:mkl_libs_windows",
-        ],
+    deps = ["@openblas//:lib", "@gfortran//:lib"] + select({
+        #"@org_tensorflow//tensorflow:linux_x86_64": [
+        #    "@mkl_linux//:mkl_headers",
+        #    "@mkl_linux//:mkl_libs_linux",
+        #],
+        #"@org_tensorflow//tensorflow:macos": [
+        #    "@mkl_darwin//:mkl_headers",
+        #    "@mkl_darwin//:mkl_libs_darwin",
+        #],
+        #"@org_tensorflow//tensorflow:windows": [
+        #    "@mkl_windows//:mkl_headers",
+        #    "@mkl_windows//:mkl_libs_windows",
+        #],
         "//conditions:default": [],
     }),
 )

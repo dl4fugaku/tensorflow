@@ -142,3 +142,29 @@ http_archive(
         "http://download.tensorflow.org/models/speech_commands_v0.01.zip",
     ],
 )
+
+new_local_repository(
+    name = "openblas",
+    path = "/scr0/jens/spack/opt/spack/linux-centos7-x86_64/gcc-9.1.0/openblas-0.3.6-gyvjlofuwcw25ouj42jazev25svqizuv",
+    build_file_content = """
+package(default_visibility = ["//visibility:public"])
+cc_library(
+    name = "lib",
+    srcs = glob(["lib/libopenblas.so"]),
+#    srcs = glob(["lib/libopenblas.a"]),
+    hdrs = glob(["include/*.h"]),
+)
+"""
+)
+new_local_repository(
+    name = "gfortran",
+    path = "/scr0/jens/spack/opt/spack/linux-centos7-x86_64/gcc-9.1.0/gcc-9.1.0-qn3nra4nquabplipzj3k4v6aff2jd4tr/lib64",
+    build_file_content = """
+package(default_visibility = ["//visibility:public"])
+cc_library(
+    name = "lib",
+    srcs = glob(["libgfortran.so", "libquadmath.so", "libgomp.so"]),
+#    srcs = glob(["libgfortran.a", "libquadmath.a", "libgomp.a"]),
+)
+"""
+)

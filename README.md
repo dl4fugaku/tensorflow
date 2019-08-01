@@ -5,6 +5,7 @@ spack compiler find
 spack install gcc@9.1.0
 spack load gcc@9.1.0
 spack compiler find
+pack install gcc@9.1.0%gcc@9.1.0 piclibs=True
 spack install git%gcc@9.1.0
 spack load git
 spack install hdf5@1.10.5%gcc@9.1.0
@@ -109,6 +110,10 @@ Preconfigured Bazel build configs to DISABLE default on features:
         --config=nokafka        # Disable Apache Kafka support.
         --config=nonccl         # Disable NVIDIA NCCL support.
 Configuration finished
+
+cd third_party/
+ln -s /scr0/jens/spack/opt/spack/linux-centos7-x86_64/gcc-9.1.0/openblas-0.3.6-gyvjlofuwcw25ouj42jazev25svqizuv/ openblas
+cd -
 
 cd /scr0/jens/spack/opt/spack/linux-centos7-x86_64/gcc-9.1.0/python-3.7.3-*/lib/python3.7/site-packages
 for x in setuptools pip scipy mock wheel future theano keras numpy pbr; do ln -s ../../../../py-${x}-*/lib/python3.7/site-packages/${x} .; done
