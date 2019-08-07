@@ -250,3 +250,28 @@ Epoch 3/3
     "time": 2.762557325574259,
     "time_epoch": 2.762557325574259
 }
+
+
+
+
+profiling libs and jits
+
+option a (libs):
+- check lib dependencies of tensorflow:
+  ldd /scr0/jens/spack/opt/spack/linux-centos7-x86_64/gcc-9.1.0/python-3.7.3-*/lib/python3.7/site-packages/tensorflow/python/../libtensorflow_framework.so.2
+- choose which lib to inspect:
+    export LD_PROFILE=libtensorflow_framework.so.2   #( or libopenblas.so.0 libgfortran.so.5 libgomp.so.1 libquadmath.so.0 libstdc++.so.6 libgcc_s.so.1)
+- run as normal
+- analyze with sprof:
+  sprof <PATH_TO_LIB>/<LIBNAME> <LIBNAME>.profile | head -50
+
+option b (jits):
+run same time (perf when traning starts):
+- OMP_NUM_THREADS=18 GOMP_SPINCOUNT=0 OMP_SCHEDULE=static OMP_DISPLAY_ENV=TRUE TF_NUM_INTEROP_THREADS=18 TF_NUM_INTRAOP_THREADS=2 python3.7 -m benchmarker  --mode=training --framework=tensorflow --problem=resnet50 --problem_size=32 --batch_size=4
+- perf record -e instructions:u -F 15000 -a -g
+analyze (check /tmp/perf-*):
+perf report
+perf report -v
+perf report --no-children
+perf report --sort comm,dso
+
