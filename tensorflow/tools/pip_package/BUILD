@@ -223,7 +223,7 @@ filegroup(
         ],
     }) + select({
         "//tensorflow/core/kernels:xsmm": [
-            "@libxsmm_archive//:LICENSE.md",
+            "@libxsmm_archive//:LICENSE",
         ],
         "//conditions:default": [],
     }) + if_cuda([

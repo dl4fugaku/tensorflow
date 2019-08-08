@@ -1697,7 +1697,7 @@ class MklDnnData {
 
   ~MklDnnData() {
     if (allocated_buffer_ != nullptr) {
-      cpu_allocator()->DeallocateRaw(allocated_buffer_);
+      cpu_allocator_base()->DeallocateRaw(allocated_buffer_);
     }
     cpu_engine_ = nullptr;  // We don't own this.
     delete (user_memory_);
@@ -1844,7 +1844,7 @@ class MklDnnData {
   /// allocate function for data buffer
   inline void AllocateBuffer(size_t size) {
     const int64 kMemoryAlginment = 64;  // For AVX512 memory alignment.
-    allocated_buffer_ = cpu_allocator()->AllocateRaw(kMemoryAlginment, size);
+    allocated_buffer_ = cpu_allocator_base()->AllocateRaw(kMemoryAlginment, size);
   }
 
   inline void* GetAllocatedBuffer() { return allocated_buffer_; }

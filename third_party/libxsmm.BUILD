@@ -3,7 +3,7 @@
 
 licenses(["notice"])  # BSD 3-clause
 
-exports_files(["LICENSE.md"])
+exports_files(["LICENSE"])
 
 # Arguments to ./scripts/libxsmm_interface.py, see that file for detailed description.
 #  precision: SP & DP
@@ -101,7 +101,12 @@ cc_library(
     ],
     defines = [
         "LIBXSMM_BUILD",
-        "__BLAS=0",
+        #"__BLAS=0",
+	"__BLAS=1",
+	"__CBLAS",
+	"__OPENBLAS",
+	"LIBXSMM_PERF",
+	"LIBXSMM_PERF_JITDUMP",
     ],
     includes = [
         "include",
