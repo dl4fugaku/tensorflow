@@ -16,9 +16,9 @@ limitations under the License.
 #include "tensorflow/compiler/xla/service/llvm_compiler.h"
 #include "tensorflow/core/platform/denormal.h"
 
-#ifdef __FAST_MATH__
-#error "Don't build XLA with -ffast-math"
-#endif
+//#ifdef __FAST_MATH__
+//#error "Don't build XLA with -ffast-math"
+//#endif
 
 namespace xla {
 Status LLVMCompiler::RunHloPassesOnModuleGroup(
