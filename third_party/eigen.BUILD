@@ -66,7 +66,12 @@ cc_library(
         "EIGEN_MPL2_ONLY",
         "EIGEN_MAX_ALIGN_BYTES=64",
         "EIGEN_HAS_TYPE_TRAITS=0",
+	"EIGEN_NO_DEBUG",
+	"EIGEN_USE_BLAS",
     ],
+    deps = [ "@openblas//:lib", "@gfortran//:lib" ] + select({
+        "//conditions:default": [],
+    }),
     includes = ["."],
     visibility = ["//visibility:public"],
 )
