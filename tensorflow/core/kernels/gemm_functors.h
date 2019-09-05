@@ -49,10 +49,11 @@ limitations under the License.
 
 // Older Raspberry Pi systems don't have NEON SIMD acceleration, so Eigen falls
 // back to scalar code, but OpenBLAS has much faster support so prefer that.
-#if defined(RASPBERRY_PI) && defined(USE_GEMM_FOR_CONV) && defined(USE_OPENBLAS)
-#include <cblas.h>
+//#if defined(RASPBERRY_PI) && defined(USE_GEMM_FOR_CONV) && defined(USE_OPENBLAS)
+//#include <cblas.h>
+#include </scr0/jens/spack/opt/spack/linux-centos7-x86_64/gcc-9.1.0/openblas-0.3.6-gyvjlofuwcw25ouj42jazev25svqizuv/include/cblas.h>
 #define USE_CBLAS_GEMM
-#endif
+//#endif
 
 // A readable but slow implementation of matrix multiplication, useful for
 // debugging and understanding the algorithm. Use instead of FastGemmFunctor in
