@@ -151,7 +151,8 @@ new_local_repository(
 package(default_visibility = ["//visibility:public"])
 cc_library(
     name = "lib",
-    srcs = glob(["lib/libopenblas.so"]),
+    srcs = glob(["lib/libopenblas.a"]),
+#    srcs = glob(["lib/libopenblas.so"]),
     hdrs = glob(["include/*.h"]),
 )
 """
