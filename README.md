@@ -141,7 +141,18 @@ pip3.7 install system-query
 #mod /scr0/jens/spack/opt/spack/linux-centos7-x86_64/gcc-9.1.0/py-keras-2.2.4-5btjtcvg66icnznhrt7mnzcrswoenmc3/lib/python3.7/site-packages/keras/optimizers.py
 
 #running:
-seems resnet50/benchmarker isnt using this codepath => no jitting => no improvements
+seems resnet50/benchmarker isnt using this codepath => no jitting => no improvements compared to mkldnn/nomkl
+
+...
+    },
+    "samples_per_second": 11.570805722221522,
+    "time": 2.765580960238973,
+    "time_epoch": 2.765580960238973
+}
+LIBXSMM_TARGET=hsw
+Registry: 20 MB
+LIBXSMM_TARGET=hsw
+Registry: 20 MB
 
 
 test integration and jit profiling
