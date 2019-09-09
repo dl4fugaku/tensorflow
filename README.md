@@ -1,6 +1,13 @@
+dont use --config=ngraph, its deprecated https://github.com/tensorflow/tensorflow/issues/28470
+
+
 step 1: install our TF plain version !!!! NEEDS XLA
 step 1.1:  need libtensorflow_cc.so
  TEST_TMPDIR=../.cache/bazel CC=gcc CXX=g++ bazel --batch build --config=numa --config=v2 --config=noaws --config=nohdfs --config=noignite --config=nokafka --config=nonccl --copt=-march=native --copt=-Ofast --copt=-finline-functions --copt=-findirect-inlining --cxxopt=-march=native --cxxopt=-Ofast --cxxopt=-finline-functions --cxxopt=-findirect-inlining --cxxopt=-D_GLIBCXX_USE_CXX11_ABI=0 //tensorflow:libtensorflow_cc.so --local_cpu_resources=36 --local_ram_resources=$((100*1024)) --use_action_cache --verbose_failures --repository_cache=/scr0/jens/.cache/bazel --disk_cache=/scr0/jens/.cache/bazel
+
+or
+
+TEST_TMPDIR=../.cache/bazel CC=gcc CXX=g++ bazel --batch build --config=numa --config=v2 --config=noaws --config=nohdfs --config=noignite --config=nokafka --config=nonccl  --copt=-march=native --copt=-O3 --copt=-finline-functions --copt=-findirect-inlining --copt=-Wl,--as-needed --cxxopt=-march=native --cxxopt=-O3 --cxxopt=-finline-functions --cxxopt=-findirect-inlining --cxxopt=-Wl,--as-needed --cxxopt=-D_GLIBCXX_USE_CXX11_ABI=0 //tensorflow/tools/pip_package:build_pip_package //tensorflow:libtensorflow_cc.so --local_cpu_resources=$((2*36)) --local_ram_resources=$((100*1024)) --use_action_cache --verbose_failures --repository_cache=/scr0/jens/.cache/bazel --disk_cache=/scr0/jens/.cache/bazel
 
 step 2:
 cd /scr0/jens/
