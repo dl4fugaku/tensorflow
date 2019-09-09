@@ -68,7 +68,12 @@ cc_library(
         "EIGEN_HAS_TYPE_TRAITS=0",
 	"EIGEN_NO_DEBUG",
 	"EIGEN_USE_BLAS",
+#	"EIGEN_USE_LIBXSMM",
     ],
+#    deps = [ "@libxsmm_archive//:xsmm_avx", "@openblas//:lib", "@gfortran//:lib" ] + select({
+    deps = [ "@openblas//:lib", "@gfortran//:lib" ] + select({
+        "//conditions:default": [],
+    }),
     includes = ["."],
     visibility = ["//visibility:public"],
 )
