@@ -73,3 +73,125 @@ TEST_TMPDIR=../.cache/bazel CC=gcc CXX=g++ bazel --output_base=${TFBASE}/log bui
 ./bazel-bin/tensorflow/tools/pip_package/build_pip_package ./tmp/tensorflow_pkg
 python3.7 -m pip install --upgrade ./tmp/tensorflow_pkg/tensorflow-2.0.0rc0-cp37-cp37m-linux_x86_64.whl
 ```
+
+
+⇒  OMP_NUM_THREADS=18 GOMP_SPINCOUNT=0 OMP_SCHEDULE=static OMP_DISPLAY_ENV=TRUE TF_NUM_INTEROP_THREADS=18 TF_NUM_INTRAOP_THREADS=2 python3.7 -m benchmarker  --mode=training --framework=tensorflow --problem=resnet50 --problem_size=32 --batch_size=4                                                                                                                                      
+OPENMP DISPLAY ENVIRONMENT BEGIN
+  _OPENMP = '201511'
+  OMP_DYNAMIC = 'FALSE'
+  OMP_NESTED = 'FALSE'
+  OMP_NUM_THREADS = '18'
+  OMP_SCHEDULE = 'STATIC'
+  OMP_PROC_BIND = 'FALSE'
+  OMP_PLACES = ''
+  OMP_STACKSIZE = '0'
+  OMP_WAIT_POLICY = 'PASSIVE'
+  OMP_THREAD_LIMIT = '4294967295'
+  OMP_MAX_ACTIVE_LEVELS = '2147483647'
+  OMP_CANCELLATION = 'FALSE'
+  OMP_DEFAULT_DEVICE = '0'
+  OMP_MAX_TASK_PRIORITY = '0'
+  OMP_DISPLAY_AFFINITY = 'FALSE'
+  OMP_AFFINITY_FORMAT = 'level %L thread %i affinity %A'
+OPENMP DISPLAY ENVIRONMENT END
+Using TensorFlow backend.
+WARNING: Logging before flag parsing goes to stderr.
+W0909 18:33:11.245654 139963830617920 deprecation.py:506] From /scr0/jens/spack/opt/spack/linux-centos7-x86_64/gcc-9.1.0/python-3.7.3-civ2iiqopzfrzuhnit4hpexjlm4uwp5b/lib/python3.7/site-packages/tensorflow_core/python/ops/resource_variable_ops.py:1630: calling BaseResourceVariable.__init__ (from tensorflow.python.ops.resource_variable_ops) with constraint is deprecated and will be removed in a future version.
+Instructions for updating:
+If using Keras pass *_constraint arguments to layers.
+preheat
+W0909 18:33:17.685415 139963830617920 deprecation.py:323] From /scr0/jens/spack/opt/spack/linux-centos7-x86_64/gcc-9.1.0/python-3.7.3-civ2iiqopzfrzuhnit4hpexjlm4uwp5b/lib/python3.7/site-packages/tensorflow_core/python/ops/math_grad.py:1424: where (from tensorflow.python.ops.array_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use tf.where in 2.0, which has the same broadcast rule as np.where
+Epoch 1/1
+32/32 [==============================] - 13s 398ms/step - loss: 1.0923 - acc: 0.8750
+train
+Epoch 1/3
+32/32 [==============================] - 4s 113ms/step - loss: 1.0996 - acc: 0.8750
+Epoch 2/3
+32/32 [==============================] - 3s 108ms/step - loss: 0.1507 - acc: 0.9062
+Epoch 3/3
+32/32 [==============================] - 3s 108ms/step - loss: 0.7328 - acc: 0.7500
+{
+    "batch_size": 4,
+    "batch_size_per_device": 4,
+    "channels_first": false,
+    "cnt_classes": 1000,
+    "device": "Intel(R) Xeon(R) CPU E5-2699 v3 @ 2.30GHz",
+    "framework": "tensorflow",
+    "framework_full": "Keras-2.2.4/tensorflow_2.0.0-rc0",
+    "gpus": [],
+    "misc": null,
+    "mode": "training",
+    "nb_gpus": 0,
+    "path_out": "./logs/training",
+    "platform": {
+        "cpu": {
+            "brand": "Intel(R) Xeon(R) CPU E5-2699 v3 @ 2.30GHz",
+            "cache": {
+                "1": 32768,
+                "2": 262144,
+                "3": 47185920
+            },
+            "clock": 2786.048777777776,
+            "clock_max": 3600.0,
+            "clock_min": 1200.0,
+            "logical_cores": 36,
+            "physical_cores": 18
+        },
+        "gpus": [
+            {
+                "brand": "Tesla K40c",
+                "clock": 745000,
+                "compute_capability": 3.5,
+                "cores": 2880,
+                "memory": 11996954624,
+                "memory_clock": 3004000,
+                "multiprocessors": 15,
+                "warp_size": 32
+            },
+            {
+                "brand": "Tesla K40c",
+                "clock": 745000,
+                "compute_capability": 3.5,
+                "cores": 2880,
+                "memory": 11996954624,
+                "memory_clock": 3004000,
+                "multiprocessors": 15,
+                "warp_size": 32
+            }
+        ],
+        "hdds": {
+            "/dev/sda": {
+                "model": "Crucial_CT512MX1",
+                "size": 1000215216
+            },
+            "/dev/sdb": {
+                "model": "SAMSUNG MZHPU512",
+                "size": 1000215216
+            }
+        },
+        "host": "paris0.m.gsic.titech.ac.jp",
+        "os": "Linux-3.10.0-957.12.1.el7.x86_64-x86_64-with-centos-7.6.1810-Core",
+        "ram": {
+            "total": 134941593600
+        },
+        "swap": 0
+    },
+    "problem": {
+        "bytes_x_train": 19267584,
+        "cnt_batches_per_epoch": 8.0,
+        "name": "resnet50",
+        "shape_x_train": [
+            32,
+            224,
+            224,
+            3
+        ],
+        "size": 32
+    },
+    "samples_per_second": 9.114960999922497,
+    "time": 3.510711675044149,
+    "time_epoch": 3.510711675044149
+}
+
