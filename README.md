@@ -36,6 +36,36 @@ spack install py-keras ^openblas@0.3.6 /gyvjlof ^python@3.7.3
 spack load py-pip; spack load py-wheel; spack load py-pyyaml; spack load py-six; spack load py-pbr; spack load py-future; spack load py-mock;
 spack load py-theano; spack load py-keras-preprocessing; spack load py-keras-applications; spack load py-keras
 
+#need scorep patch: /scr0/jens/spack/var/spack/repos/builtin/packages/scorep/TFfix13.patch
+```
+diff -Nur scorep-6.0.old/src/tools/instrumenter/scorep_instrumenter_cmd_line.cpp scorep-6.0.new/src/tools/instrumenter/scorep_instrumenter_cmd_line.cpp
+--- scorep-6.0.old/src/tools/instrumenter/scorep_instrumenter_cmd_line.cpp      2019-03-23 02:41:48.951808977 +0900
++++ scorep-6.0.new/src/tools/instrumenter/scorep_instrumenter_cmd_line.cpp      2019-09-26 16:17:02.276421925 +0900
+@@ -600,8 +600,9 @@
+         }
+         add_library( current );
+     }
+-    else if ( ( current[ 0 ] != '-' ) &&
+-              ( is_source_file( current ) || is_object_file( current ) ) )
++    else if ( ( current.find(".params") != std::string::npos ) ||
++              (( current[ 0 ] != '-' ) &&
++              ( is_source_file( current ) || is_object_file( current ) )) )
+     {
+         add_input_file( current );
+         return scorep_parse_mode_command;
+```
+spack edit scorep
+add `patch('TFfix13.patch', when='@6:')` after gcc7.patch
+spack install scorep ^openmpi@3.1.4/5g7q2fs
+spack load scorep
+
+#need also scorep py binding
+git clone https://github.com/score-p/scorep_binding_python.git
+cd scorep_binding_python
+python3.7 -m pip install .
+
+test: SCOREP_TOTAL_MEMORY=3900M SCOREP_ENABLE_PROFILING=false SCOREP_ENABLE_TRACING=true OMP_NUM_THREADS=$((2*18)) GOMP_SPINCOUNT=0 OMP_SCHEDULE=static OMP_DISPLAY_ENV=TRUE OPENBLAS_NUM_THREADS=1 numactl --physcpubind="0-35" --membind="0" python3.7 -m scorep ./bechmarker-wrapper.py --mode=training --framework=tensorflow --problem=resnet50 --problem_size=32 --batch_size=4
+
 PYPATH=`which python`
 PY2PATH=`dirname ${PYPATH}`
 PY2PATH=`dirname ${PY2PATH}`
@@ -61,15 +91,18 @@ BLAS_LIB_A=libopenblas.a
 echo "${PYPATH}\n${PY2PATH}/lib/python3.7/site-packages\nn\nn\nn\nn\nn\nn\n\nn" | TEST_TMPDIR=../.cache/bazel ./configure
 sed -i -e "s#/scr0/jens#${TFBASE}#" ./WORKSPACE
 sed -i -e "s#/scr0/jens#${TFBASE}#" ./tensorflow/core/kernels/gemm_functors.h
+
 TEST_TMPDIR=../.cache/bazel CC=gcc CXX=g++ bazel --output_base=${TFBASE}/log build \
-	-s --define=tensorflow_mkldnn_contraction_kernel=0 --config=numa --config=v2 \
-	--config=noaws --config=nohdfs --config=noignite --config=nokafka --config=nonccl \
-	--copt=-march=native --copt=-Ofast --copt=-finline-functions --copt=-findirect-inlining \
-	--cxxopt=-march=native --cxxopt=-Ofast --cxxopt=-finline-functions --cxxopt=-findirect-inlining --cxxopt=-D_GLIBCXX_USE_CXX11_ABI=0 \
-	--copt=-DUSE_CBLAS_GEMM --cxxopt=-DUSE_CBLAS_GEMM \
-	--copt=-I${BLAS_INSTALL_PATH}/include --linkopt=-L${BLAS_INSTALL_PATH}/lib --linkopt=-l:${BLAS_LIB_A} \
-	//tensorflow/tools/pip_package:build_pip_package \
-	--use_action_cache --verbose_failures --repository_cache=${TFBASE}/.cache/bazel --disk_cache=${TFBASE}/.cache/bazel
+        --host_crosstool_top=@bazel_tools//tools/cpp:default-toolchain --crosstool_top=@local_config_arm_compiler//:toolchain \
+        -s --define=tensorflow_mkldnn_contraction_kernel=0 --config=numa --config=v2 \
+        --config=noaws --config=nohdfs --config=noignite --config=nokafka --config=nonccl \
+        --copt=-march=native --copt=-Ofast --copt=-finline-functions --copt=-findirect-inlining \
+        --cxxopt=-march=native --cxxopt=-Ofast --cxxopt=-finline-functions --cxxopt=-findirect-inlining --cxxopt=-D_GLIBCXX_USE_CXX11_ABI=0 \
+        --copt=-DUSE_CBLAS_GEMM --cxxopt=-DUSE_CBLAS_GEMM \
+        --copt=-I${BLAS_INSTALL_PATH}/include --linkopt=-L${BLAS_INSTALL_PATH}/lib --linkopt=-l:${BLAS_LIB_A} --linkopt=-lpthread \
+        //tensorflow/tools/pip_package:build_pip_package //tensorflow:libtensorflow.so //tensorflow:libtensorflow_cc.so \
+        --use_action_cache --verbose_failures --repository_cache=${TFBASE}/.cache/bazel --disk_cache=${TFBASE}/.cache/bazel --local_cpu_resources=36
+
 ./bazel-bin/tensorflow/tools/pip_package/build_pip_package ./tmp/tensorflow_pkg
 python3.7 -m pip install --upgrade ./tmp/tensorflow_pkg/tensorflow-2.0.0rc0-cp37-cp37m-linux_x86_64.whl
 ```

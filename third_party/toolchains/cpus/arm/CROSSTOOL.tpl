@@ -307,13 +307,13 @@ toolchain {
 
   # Enable coloring even if there's no attached terminal. Bazel removes the
   # escape sequences if --nocolor is specified.
-  compiler_flag: "-fcolor-diagnostics"
+#  compiler_flag: "-fcolor-diagnostics"
 
   # All warnings are enabled. Maybe enable -Werror as well?
   compiler_flag: "-Wall"
   # Enable a few more warnings that aren't part of -Wall.
-  compiler_flag: "-Wthread-safety"
-  compiler_flag: "-Wself-assign"
+#  compiler_flag: "-Wthread-safety"
+#  compiler_flag: "-Wself-assign"
 
   # Keep stack frames for debugging, even in opt mode.
   compiler_flag: "-fno-omit-frame-pointer"

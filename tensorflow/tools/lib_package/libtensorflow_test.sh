@@ -14,7 +14,7 @@
 # limitations under the License.
 # ==============================================================================
 
-set -ex
+#set -ex
 
 # Sanity test for the package C-library archive.
 # - Unarchive
@@ -22,7 +22,7 @@ set -ex
 # - Run it
 
 # Tools needed: A C-compiler and tar
-CC="${CC}"
+CC="scorep-gcc"
 TAR="${TAR}"
 
 [ -z "${CC}" ] && CC="/usr/bin/gcc"
@@ -35,12 +35,12 @@ CFILE="${PWD}/tensorflow/tools/lib_package/libtensorflow_test.c"
 cd ${TEST_TMPDIR}
 
 # Extract the archive into tensorflow/
-mkdir tensorflow
-${TAR} -xzf ${TARFILE} -Ctensorflow
+#mkdir tensorflow
+#${TAR} -xzf ${TARFILE} -Ctensorflow
 
 # Compile the test .c file. Assumes with_framework_lib=True.
-${CC} ${CFILE} -Itensorflow/include -Ltensorflow/lib\
-  -ltensorflow_framework -ltensorflow -oa.out
+${CC} -v -O0 -g ${CFILE} -I/scr0/jens/tensorflow -Itensorflow/include -Ltensorflow/lib\
+  -L/scr0/jens/tensorflow/bazel-out/k8-opt/bin/tensorflow -ltensorflow_framework -ltensorflow -lpthread -oa.out
 
 # Execute it, with the shared library available.
 # DYLD_LIBRARY_PATH is used on OS X, LD_LIBRARY_PATH on Linux.
@@ -49,4 +49,6 @@ ${CC} ${CFILE} -Itensorflow/include -Ltensorflow/lib\
 # are in DYLD_LIBRARY_PATH in the test harness for OS X.
 export DYLD_LIBRARY_PATH=tensorflow/lib:${DYLD_LIBRARY_PATH}
 export LD_LIBRARY_PATH=tensorflow/lib:${LD_LIBRARY_PATH}
+export LD_LIBRARY_PATH=/scr0/jens/tensorflow/bazel-out/k8-opt/bin/tensorflow:${LD_LIBRARY_PATH}
+ulimit -c unlimited
 ./a.out
