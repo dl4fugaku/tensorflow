@@ -70,19 +70,34 @@ cc_library(
         "-DUSE_CBLAS",
     ] + if_mkl_open_source_only([
         "-UUSE_MKL",
-        "-UUSE_CBLAS",
+        "-DUSE_CBLAS",
+#        ###OpenBLAS lib
+#        "-DMKLDNN_THR=MKLDNN_THR_SEQ",
+        "-DMKLDNN_THR=MKLDNN_THR_OMP",
+        "-fopenmp",
+#        "-I /scr0/jens/spack/opt/spack/linux-centos7-x86_64/gcc-9.1.0/openblas-0.3.6-gyvjlofuwcw25ouj42jazev25svqizuv/include",
+        "-I /scr0/jens/spack/opt/spack/linux-centos7-x86_64/gcc-9.1.0/openblas-0.3.6-f67sdjaj5bqkvesbepb5lhbb6zoa4rvn/include",
     ]) + if_mkl_v1_open_source_only([
         "-UUSE_MKL",
-        "-UUSE_CBLAS",
+        "-DUSE_CBLAS",
+#        "-DMKLDNN_THR=MKLDNN_THR_SEQ",
+        "-DMKLDNN_THR=MKLDNN_THR_OMP",
     ]) + select({
         "@org_tensorflow//tensorflow:linux_x86_64": [
-            "-fopenmp",  # only works with gcc
+            #"-fopenmp",  # only works with gcc
         ],
         # TODO(ibiryukov): enable openmp with clang by including libomp as a
         # dependency.
         ":clang_linux_x86_64": [],
         "//conditions:default": [],
     }),
+    linkopts = [
+#        "-L /scr0/jens/spack/opt/spack/linux-centos7-x86_64/gcc-9.1.0/openblas-0.3.6-gyvjlofuwcw25ouj42jazev25svqizuv/lib",
+        "-L /scr0/jens/spack/opt/spack/linux-centos7-x86_64/gcc-9.1.0/openblas-0.3.6-f67sdjaj5bqkvesbepb5lhbb6zoa4rvn/lib",
+##        "-l:libopenblas.a",
+        "-lopenblas",
+        "-fopenmp",
+    ],
     includes = [
         "include",
         "src",
@@ -93,19 +108,19 @@ cc_library(
     ],
     nocopts = "-fno-exceptions",
     visibility = ["//visibility:public"],
-    deps = select({
-        "@org_tensorflow//tensorflow:linux_x86_64": [
-            "@mkl_linux//:mkl_headers",
-            "@mkl_linux//:mkl_libs_linux",
-        ],
-        "@org_tensorflow//tensorflow:macos": [
-            "@mkl_darwin//:mkl_headers",
-            "@mkl_darwin//:mkl_libs_darwin",
-        ],
-        "@org_tensorflow//tensorflow:windows": [
-            "@mkl_windows//:mkl_headers",
-            "@mkl_windows//:mkl_libs_windows",
-        ],
+    deps = [ "@openblas//:incl", "@openblas//:lib" ] + select({
+        #"@org_tensorflow//tensorflow:linux_x86_64": [
+        #    "@mkl_linux//:mkl_headers",
+        #    "@mkl_linux//:mkl_libs_linux",
+        #],
+        #"@org_tensorflow//tensorflow:macos": [
+        #    "@mkl_darwin//:mkl_headers",
+        #    "@mkl_darwin//:mkl_libs_darwin",
+        #],
+        #"@org_tensorflow//tensorflow:windows": [
+        #    "@mkl_windows//:mkl_headers",
+        #    "@mkl_windows//:mkl_libs_windows",
+        #]
         "//conditions:default": [],
     }),
 )

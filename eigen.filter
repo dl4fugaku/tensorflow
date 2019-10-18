@@ -1,0 +1,8 @@
+SCOREP_FILE_NAMES_BEGIN
+	INCLUDE */Eigen/*
+SCOREP_FILE_NAMES_END
+SCOREP_REGION_NAMES_BEGIN
+	INCLUDE Eigen*
+	EXCLUDE Eigen::internal::TensorContractionSubMapper*
+		Eigen::internal::TensorContractionInputMapper*
+SCOREP_REGION_NAMES_END

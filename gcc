@@ -1,0 +1,3 @@
+#!/bin/bash
+
+/scr0/jens/spack/opt/spack/linux-centos7-x86_64/gcc-9.1.0/scorep-6.0-tk2cm6cbwyh32p3xwimn2hrwuzilsllt/bin/scorep --thread=pthread --nopomp --noopenmp --instrument-filter=/scr0/jens/tensorflow/eigen.filter /scr0/jens/spack/opt/spack/linux-centos7-x86_64/gcc-9.1.0/gcc-9.1.0-qn3nra4nquabplipzj3k4v6aff2jd4tr/bin/gcc $@
