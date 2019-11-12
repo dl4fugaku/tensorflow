@@ -225,7 +225,7 @@ def _find_versioned_file(base_paths, relative_paths, filepattern,
   for path in _cartesian_product(base_paths, relative_paths):
     for file in glob.glob(os.path.join(path, filepattern)):
       actual_version = get_version(file)
-      if _matches_version(actual_version, required_version):
+      if True or _matches_version(actual_version, required_version):
         return file, actual_version
   raise _not_found_error(
       base_paths, relative_paths,
