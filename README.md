@@ -497,3 +497,17 @@ void cblas_sgemm(OPENBLAS_CONST enum CBLAS_ORDER Order, OPENBLAS_CONST enum CBLA
 gcc -Wall -fPIC -shared -o myfopen.so sgemm-wrapper.c -ldl
 LD_PRELOAD=/scr0/jens/benchmarker/myfopen.so python3.7 -m scorep --nopython --thread=pthread ./bechmarker-wrapper.py --mode=training --framework=tensorflow --problem=resnet50 --problem_size=32 --batch_size=4
 
+
+getting nvidia support into tf
+==============================
+echo "${PYPATH}\n${PY2PATH}/lib/python3.7/site-packages\ny\nn\nn\ny\nn\n7.0\nn\n\nn\n\n\n" \
+ | CUDA_TOOLKIT_PATH=/usr/local/cuda,/usr/local/cuda/bin,/usr/local/cuda/targets/aarch64-linux/include,/usr/local/cuda/targets/aarch64-linux/lib TF_CUDA_VERSION=10.2 TEST_TMPDIR=../.cache/bazel ./configure
+TEST_TMPDIR=../.cache/bazel CC=gcc CXX=g++ bazel --output_base=${TFBASE}/log build \
+        -s --config=numa --config=v2 --config=cuda \
+        --config=noaws --config=nohdfs --config=noignite --config=nokafka \
+        --copt=-march=native --copt=-O3 --copt=-finline-functions --copt=-findirect-inlining \
+        --cxxopt=-march=native --cxxopt=-O3 --cxxopt=-finline-functions --cxxopt=-findirect-inlining --cxxopt=-D_GLIBCXX_USE_CXX11_ABI=0 \
+        //tensorflow/tools/pip_package:build_pip_package //tensorflow:libtensorflow.so //tensorflow:libtensorflow_cc.so \
+        --use_action_cache --verbose_failures --repository_cache=${TFBASE}/.cache/bazel --disk_cache=${TFBASE}/.cache/bazel --local_cpu_resources=36
+python3.7 -m benchmarker --mode=training --framework=tensorflow --problem=resnet50 --problem_size=512 --batch_size=32
+
