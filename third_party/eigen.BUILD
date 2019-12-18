@@ -66,6 +66,8 @@ cc_library(
         "EIGEN_MPL2_ONLY",
         "EIGEN_MAX_ALIGN_BYTES=64",
         "EIGEN_HAS_TYPE_TRAITS=0",
+        "EIGEN_NO_DEBUG",
+        "EIGEN_HAS_CXX11",
     ],
     includes = ["."],
     visibility = ["//visibility:public"],
