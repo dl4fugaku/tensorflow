@@ -92,36 +92,36 @@ def tf_repositories(path_prefix = "", tf_repo_name = ""):
         remote_config_repo = "../arm_compiler",
     )
 
-    mkl_repository(
-        name = "mkl_linux",
-        build_file = clean_dep("//third_party/mkl:mkl.BUILD"),
-        sha256 = "a936d6b277a33d2a027a024ea8e65df62bd2e162c7ca52c48486ed9d5dc27160",
-        strip_prefix = "mklml_lnx_2019.0.5.20190502",
-        urls = [
-            "https://storage.googleapis.com/mirror.tensorflow.org/github.com/intel/mkl-dnn/releases/download/v0.20-rc/mklml_lnx_2019.0.5.20190502.tgz",
-            "https://github.com/intel/mkl-dnn/releases/download/v0.20-rc/mklml_lnx_2019.0.5.20190502.tgz",
-        ],
-    )
-    mkl_repository(
-        name = "mkl_windows",
-        build_file = clean_dep("//third_party/mkl:mkl.BUILD"),
-        sha256 = "535857b17643d7f7546b58fc621244e7cfcc4fff2aa2ebd3fc5b4e126bfc36cf",
-        strip_prefix = "mklml_win_2019.0.5.20190502",
-        urls = [
-            "https://storage.googleapis.com/mirror.tensorflow.org/github.com/intel/mkl-dnn/releases/download/v0.20-rc/mklml_win_2019.0.5.20190502.zip",
-            "https://github.com/intel/mkl-dnn/releases/download/v0.20-rc/mklml_win_2019.0.5.20190502.zip",
-        ],
-    )
-    mkl_repository(
-        name = "mkl_darwin",
-        build_file = clean_dep("//third_party/mkl:mkl.BUILD"),
-        sha256 = "2fbb71a0365d42a39ea7906568d69b1db3bfc9914fee75eedb06c5f32bf5fa68",
-        strip_prefix = "mklml_mac_2019.0.5.20190502",
-        urls = [
-            "https://storage.googleapis.com/mirror.tensorflow.org/github.com/intel/mkl-dnn/releases/download/v0.20-rc/mklml_mac_2019.0.5.20190502.tgz",
-            "https://github.com/intel/mkl-dnn/releases/download/v0.20-rc/mklml_mac_2019.0.5.20190502.tgz",
-        ],
-    )
+#    mkl_repository(
+#        name = "mkl_linux",
+#        build_file = clean_dep("//third_party/mkl:mkl.BUILD"),
+#        sha256 = "a936d6b277a33d2a027a024ea8e65df62bd2e162c7ca52c48486ed9d5dc27160",
+#        strip_prefix = "mklml_lnx_2019.0.5.20190502",
+#        urls = [
+#            "https://storage.googleapis.com/mirror.tensorflow.org/github.com/intel/mkl-dnn/releases/download/v0.20-rc/mklml_lnx_2019.0.5.20190502.tgz",
+#            "https://github.com/intel/mkl-dnn/releases/download/v0.20-rc/mklml_lnx_2019.0.5.20190502.tgz",
+#        ],
+#    )
+#    mkl_repository(
+#        name = "mkl_windows",
+#        build_file = clean_dep("//third_party/mkl:mkl.BUILD"),
+#        sha256 = "535857b17643d7f7546b58fc621244e7cfcc4fff2aa2ebd3fc5b4e126bfc36cf",
+#        strip_prefix = "mklml_win_2019.0.5.20190502",
+#        urls = [
+#            "https://storage.googleapis.com/mirror.tensorflow.org/github.com/intel/mkl-dnn/releases/download/v0.20-rc/mklml_win_2019.0.5.20190502.zip",
+#            "https://github.com/intel/mkl-dnn/releases/download/v0.20-rc/mklml_win_2019.0.5.20190502.zip",
+#        ],
+#    )
+#    mkl_repository(
+#        name = "mkl_darwin",
+#        build_file = clean_dep("//third_party/mkl:mkl.BUILD"),
+#        sha256 = "2fbb71a0365d42a39ea7906568d69b1db3bfc9914fee75eedb06c5f32bf5fa68",
+#        strip_prefix = "mklml_mac_2019.0.5.20190502",
+#        urls = [
+#            "https://storage.googleapis.com/mirror.tensorflow.org/github.com/intel/mkl-dnn/releases/download/v0.20-rc/mklml_mac_2019.0.5.20190502.tgz",
+#            "https://github.com/intel/mkl-dnn/releases/download/v0.20-rc/mklml_mac_2019.0.5.20190502.tgz",
+#        ],
+#    )
 
     if path_prefix:
         print("path_prefix was specified to tf_workspace but is no longer used " +
@@ -135,24 +135,26 @@ def tf_repositories(path_prefix = "", tf_repo_name = ""):
     tf_http_archive(
         name = "mkl_dnn",
         build_file = clean_dep("//third_party/mkl_dnn:mkldnn.BUILD"),
-        sha256 = "a198a9bd3c584607e6a467f780beca92c8411cd656fcc8ec6fa5abe73d4af823",
-        strip_prefix = "mkl-dnn-0.20.3",
+        sha256 = "5144c53446164034b5a511ddb8a317040d33531ee45aaf34fdf4c40c6910ddc8",
+        strip_prefix = "dnnl_aarch64-rem_jit/mkl-dnn",
         urls = [
-            "https://storage.googleapis.com/mirror.tensorflow.org/github.com/intel/mkl-dnn/archive/v0.20.3.tar.gz",
-            "https://github.com/intel/mkl-dnn/archive/v0.20.3.tar.gz",
+            #"https://storage.googleapis.com/mirror.tensorflow.org/github.com/intel/mkl-dnn/archive/v0.20.3.tar.gz",
+            #"https://github.com/intel/mkl-dnn/archive/v0.20.3.tar.gz",
+	    "https://github.com/dl4fugaku/dnnl_aarch64/archive/rem_jit.zip",
+	    "https://github.com/dl4fugaku/dnnl_aarch64/archive/rem_jit.zip",
         ],
     )
 
-    tf_http_archive(
-        name = "mkl_dnn_v1",
-        build_file = clean_dep("//third_party/mkl_dnn:mkldnn.BUILD"),
-        sha256 = "fcc2d951f7170eade0cfdd0d8d1d58e3e7785bd326bca6555f3722f8cba71811",
-        strip_prefix = "mkl-dnn-1.0-pc2",
-        urls = [
-            "https://storage.googleapis.com/mirror.tensorflow.org/github.com/intel/mkl-dnn/archive/v1.0-pc2.tar.gz",
-            "https://github.com/intel/mkl-dnn/archive/v1.0-pc2.tar.gz",
-        ],
-    )
+#    tf_http_archive(
+#        name = "mkl_dnn_v1",
+#        build_file = clean_dep("//third_party/mkl_dnn:mkldnn.BUILD"),
+#        sha256 = "fcc2d951f7170eade0cfdd0d8d1d58e3e7785bd326bca6555f3722f8cba71811",
+#        strip_prefix = "mkl-dnn-1.0-pc2",
+#        urls = [
+#            "https://storage.googleapis.com/mirror.tensorflow.org/github.com/intel/mkl-dnn/archive/v1.0-pc2.tar.gz",
+#            "https://github.com/intel/mkl-dnn/archive/v1.0-pc2.tar.gz",
+#        ],
+#    )
 
     tf_http_archive(
         name = "com_google_absl",

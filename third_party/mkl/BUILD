@@ -45,15 +45,15 @@ load(
 filegroup(
     name = "LICENSE",
     srcs = ["MKL_LICENSE"] + select({
-        "@org_tensorflow//tensorflow:linux_x86_64": [
-            "@mkl_linux//:LICENSE",
-        ],
-        "@org_tensorflow//tensorflow:macos": [
-            "@mkl_darwin//:LICENSE",
-        ],
-        "@org_tensorflow//tensorflow:windows": [
-            "@mkl_windows//:LICENSE",
-        ],
+#        "@org_tensorflow//tensorflow:linux_x86_64": [
+#            "@mkl_linux//:LICENSE",
+#        ],
+#        "@org_tensorflow//tensorflow:macos": [
+#            "@mkl_darwin//:LICENSE",
+#        ],
+#        "@org_tensorflow//tensorflow:windows": [
+#            "@mkl_windows//:LICENSE",
+#        ],
         "//conditions:default": [],
     }),
     visibility = ["//visibility:public"],

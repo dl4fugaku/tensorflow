@@ -26,6 +26,7 @@ rm -rf $HOME/.cache/bazel
 rm -rf $HOME/.cache/log
 TEST_TMPDIR=../.cache/bazel ./configure
 TEST_TMPDIR=$HOME/.cache/bazel CC=gcc CXX=g++ ~/bazel-0.25.2/output/bazel --output_base=$HOME/.cache/log build -s --config=numa --config=v2 --config=noaws --config=nohdfs --config=noignite --config=nokafka --config=nonccl --copt=-march=native --copt=-O3 --copt=-finline-functions --copt=-findirect-inlining --cxxopt=-march=native --cxxopt=-O3 --cxxopt=-finline-functions --cxxopt=-findirect-inlining --cxxopt=-D_GLIBCXX_USE_CXX11_ABI=0 //tensorflow/tools/pip_package:build_pip_package --use_action_cache --verbose_failures --repository_cache=$HOME/.cache/bazel --disk_cache=$HOME/.cache/bazel --local_ram_resources=$((16*1024))
+./bazel-bin/tensorflow/tools/pip_package/build_pip_package ./tmp/tensorflow_pkg/
 python3.6 -m pip install --user --upgrade ./tmp/tensorflow_pkg/tensorflow-2.0.0-cp36-cp36m-linux_aarch64.whl
 ```
 
