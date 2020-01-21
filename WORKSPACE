@@ -143,3 +143,69 @@ http_archive(
         "https://storage.googleapis.com/download.tensorflow.org/models/speech_commands_v0.01.zip",
     ],
 )
+
+new_local_repository(
+    name = "fujitsublas",
+    path = "/opt/FJSVxtclanga/tcsds-1.1.13",
+    build_file_content = """
+package(default_visibility = ["//visibility:public"])
+cc_library(
+    name = "lib",
+#    srcs = glob(["lib64/libfj90rt2.a", "lib64/libssl2mtexsve.a", "lib64/libssl2mtsve.a", "lib64/libfj90i.so", "lib64/libfj90fmt.a", "lib64/libfj90f.so", "lib64/libfjsrcinfo.so", "lib64/libfj90rt.so", "lib64/libfjprofcore.so", "lib64/libfjprofomp.so"]),
+#    srcs = glob(["lib64/libfj90rt2.a", "lib64/libssl2mtsve.a", "lib64/libfj90fmt.a"]),
+#    srcs = glob(["lib64/libfj90rt2.a", "lib64/libfjlapacksve.so", "lib64/libfj90i.so", "lib64/libfj90fmt.a", "lib64/libfj90f.so", "lib64/libfjsrcinfo.so", "lib64/libfj90rt.so", "lib64/libfjprofcore.so", "lib64/libfjprofomp.so"]),
+    srcs = glob(["lib64/libfjlapacksve.so"]),
+    hdrs = glob(["include/*.h"]),
+)
+"""
+)
+
+new_local_repository(
+    name = "metablas",
+    path = "/home/users/ai/domke/tensorflow",
+    build_file_content = """
+package(default_visibility = ["//visibility:public"])
+cc_library(
+    name = "lib",
+    srcs = glob(["libcblas.so"]),
+)
+"""
+)
+
+#new_local_repository(
+#    name = "libelf",
+#    path = "/usr/lib64",
+#    build_file_content = """
+#package(default_visibility = ["//visibility:public"])
+#cc_library(
+#    name = "lib",
+#    srcs = glob(["libelf.so"]),
+#)
+#"""
+#)
+#
+#new_local_repository(
+#    name = "openblas",
+#    path = "/home/users/ai/domke/spack/opt/spack/linux-rhel8-aarch64/gcc-9.2.0/openblas-0.3.7-yeqzcjmwafvdevlk6eswui6f6sekrv6d",
+#    build_file_content = """
+#package(default_visibility = ["//visibility:public"])
+#cc_library(
+#    name = "lib",
+#    srcs = glob(["lib/libopenblas.a"]),
+##    srcs = glob(["lib/libopenblas.so"]),
+#    hdrs = glob(["include/*.h"]),
+#)
+#"""
+#)
+#
+#new_local_repository(
+#    name = "gfortran",
+#    path = "/home/users/ai/domke/spack/opt/spack/linux-rhel8-aarch64/gcc-8.2.1/gcc-9.2.0-cprbfpvmehko6gpjhhk2644oi6l2xaan/lib64",
+#    build_file_content = """
+#package(default_visibility = ["//visibility:public"])
+#cc_library(
+#    name = "lib",
+#    srcs = glob(["libgomp.so", "libgfortran.so", "libgcc_s.so"]),
+#)
+#"""
+#)

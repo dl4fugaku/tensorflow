@@ -4,6 +4,7 @@ wget https://github.com/bazelbuild/bazel/releases/download/0.25.2/bazel-0.25.2-d
 mkdir bazel-0.25.2; cd bazel-0.25.2
 unzip ../bazel-0.25.2-dist.zip
 sed -i -e 's/fcntl(fd, F_OFD_SETLK/fcntl(fd, F_SETLK/' ./src/main/cpp/blaze_util_posix.cc
+sed -i -e 's/supports_gold_linker = _is_gold_supported(repository_ctx, cc)/supports_gold_linker = False/' tools/cpp/unix_cc_configure.bzl
 PROTOC=pwd/bin/protoc EXTRA_BAZEL_ARGS="--host_javabase=@local_jdk//:jdk" GRPC_JAVA_PLUGIN=pwd/grpc-java bash ./compile.sh
 export PATH=$PATH:`pwd`/../bazel-0.25.2/output
 ```
@@ -24,8 +25,11 @@ git checkout fugaku-v2-a64fx
 python3.6 -m pip install --user --upgrade numpy grpcio tensorboard absl-py keras-applications gast astor termcolor opt-einsum google-pasta wrapt wheel six protobuf numpy keras-preprocessing keras_preprocessing tensorflow-estimator
 rm -rf $HOME/.cache/bazel
 rm -rf $HOME/.cache/log
+fcc -### -march=armv8.3-a+sve -Kopenmp -c dummy.c -o dummy.o
+fcc -###  dummy.o -Kopenmp -SSL2BLAMP -L/opt/FJSVxtclanga/tcsds-1.1.13/bin/../lib64 -lfj90rt2 -lssl2mtexsve -lssl2mtsve -lfj90i -lfj90fmt -lfj90f -lfjsrcinfo -lfj90rt -lfjprofcore -lfjprofomp -lelf -shared -o libcblas.so
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:`pwd`
 TEST_TMPDIR=../.cache/bazel ./configure
-TEST_TMPDIR=$HOME/.cache/bazel CC=gcc CXX=g++ ~/bazel-0.25.2/output/bazel --output_base=$HOME/.cache/log build -s --define=tensorflow_mkldnn_contraction_kernel=0 --config=mkl_open_source_only --config=numa --config=v2 --config=noaws --config=nohdfs --config=noignite --config=nokafka --config=nonccl --copt=-march=native --copt=-O3 --copt=-finline-functions --copt=-findirect-inlining --cxxopt=-march=native --cxxopt=-O3 --cxxopt=-finline-functions --cxxopt=-findirect-inlining --cxxopt=-D_GLIBCXX_USE_CXX11_ABI=0 //tensorflow/tools/pip_package:build_pip_package --use_action_cache --verbose_failures --repository_cache=$HOME/.cache/bazel --disk_cache=$HOME/.cache/bazel --local_ram_resources=$((16*1024)) --local_cpu_resources=16
+TEST_TMPDIR=$HOME/.cache/bazel CC=gcc CXX=g++ ~/bazel-0.25.2/output/bazel --output_base=$HOME/.cache/log build -s --config=numa --config=v2 --config=noaws --config=nohdfs --config=noignite --config=nokafka --config=nonccl --copt=-march=armv8.3-a+sve --copt=-O3 --copt=-finline-functions --copt=-findirect-inlining --cxxopt=-march=armv8.3-a+sve --cxxopt=-O3 --cxxopt=-finline-functions --cxxopt=-findirect-inlining --cxxopt=-D_GLIBCXX_USE_CXX11_ABI=0 //tensorflow/tools/pip_package:build_pip_package --use_action_cache --verbose_failures --repository_cache=$HOME/.cache/bazel --disk_cache=$HOME/.cache/bazel --local_ram_resources=$((16*1024)) --local_cpu_resources=16
 ./bazel-bin/tensorflow/tools/pip_package/build_pip_package ./tmp/tensorflow_pkg/
 python3.6 -m pip install --user --upgrade ./tmp/tensorflow_pkg/tensorflow-2.0.0-cp36-cp36m-linux_aarch64.whl
 ```

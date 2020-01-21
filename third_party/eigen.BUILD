@@ -68,7 +68,11 @@ cc_library(
         "EIGEN_HAS_TYPE_TRAITS=0",
         "EIGEN_NO_DEBUG",
         "EIGEN_HAS_CXX11",
+	"EIGEN_USE_BLAS",
     ],
+    deps = [ "@fujitsublas//:lib", "@metablas//:lib" ] + select({
+        "//conditions:default": [],
+    }),
     includes = ["."],
     visibility = ["//visibility:public"],
 )
